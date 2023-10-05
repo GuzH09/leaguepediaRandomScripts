@@ -119,36 +119,6 @@ def queryPlayers(response, site, gameVersion):
         while len(sheetRow) < 13:
             sheetRow.append("")        
         
-        """current_time_two = time.time()
-        
-        # I guess we could skip this by adding all of the games from the dataframe to make it faster
-        gamestotal_list=[]
-        for name in player_names:
-            responseGamesPlayer = site.cargo_client.query(
-                limit = 1,
-                tables = "ScoreboardPlayers=SP", # Table: https://lol.fandom.com/wiki/Special:CargoTables/ScoreboardPlayers
-                fields = "COUNT(SP.Link)=Games",
-                where = "SP.Link='" + name['AllName'] + "'",
-                group_by= "SP.Link"
-            )
-            games = orjson.loads(orjson.dumps(responseGamesPlayer))
-            for game in games:
-                game['Games'] = int(game['Games'])
-            gamestotal_list.extend(games)
-        
-        # Idk what does this do
-        if len(gamestotal_list) > 0:
-            result = {} # New Dict with the sum of games
-            for gamesnumber in gamestotal_list:
-                result['Games'] = result.get('Games', 0) + gamesnumber['Games']
-            sheetRow.append(result['Games'])
-            print("Games: " + str(result['Games']))
-        else:
-            sheetRow.append("")
-        
-        finish_time_two = time.time() - current_time_two
-        print("Time: " + str(finish_time_two))"""
-        
         print("Row Number: " + str(k) + " added.")
         print("------------------------------------------------------------------------------------------------------------------------")
         
