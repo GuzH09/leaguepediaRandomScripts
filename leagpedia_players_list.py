@@ -7,6 +7,7 @@ import pandas as pd
 import os
 import time
 import requests
+from functions import check_last_version, check_champions, transmute_name_champion
 
 """
 Script done to upload data to a Google Sheet from Leaguepedia.
@@ -28,11 +29,8 @@ def queryPlayers(response, site, gameVersion):
     print("------------------------------------------------------------------------------------------------------------------------")
     
     # We get Champions.json from DDragon to update Champion Names
-    # Ex: Cho'Gath -> Chogath / Wukong -> MonkeyKing / Tahm Kench -> TahmKench
-    response_champions = requests.get(f'http://ddragon.leagueoflegends.com/cdn/{gameVersion}/data/en_US/champion.json')
-    if response_champions.status_code != 200:
-        response_champions.raise_for_status()
-    file = orjson.loads(response_champions.content) # Change to orjson
+    # Ex: Cho'Gath -> Chogath / Wukong -> MonkeyKing / Tahm Kench -> TahmKench    
+    file = check_champions(gameVersion)
     
     # sheet is the list of: lists of rows
     sheet=[]
@@ -104,14 +102,7 @@ def queryPlayers(response, site, gameVersion):
         
         if len(five_champions_grouped_and_sorted) > 0:
             for champion in five_champions_grouped_and_sorted:
-                
-                championName = ''
-                
-                for champion_obj, champion_data in file['data'].items(): # Champions.json we requested before
-                    if champion_data['name'] == str(champion['Champion']):
-                        championName = champion_data['id']
-                
-                sheetRow.append(championName)
+                sheetRow.append(transmute_name_champion(champion['Champion'], file))
         else:
             pass
         
@@ -170,12 +161,9 @@ while queryFull==False:
 
 
 # We get Versions.json from DDragon to use it on the function
-response_versions = requests.get('https://ddragon.leagueoflegends.com/api/versions.json')
-if response_versions.status_code != 200:
-    response_versions.raise_for_status()
-versions = orjson.loads(response_versions.content) # Change to orjson
+version = check_last_version()
 
 # Query To Update Data on Google Sheets
-values = queryPlayers(response=queryResponse, site=site, gameVersion=versions[0]) # Change gameVersion or get last one from ddragon
+values = queryPlayers(response=queryResponse, site=site, gameVersion=version) # Change gameVersion or get last one from ddragon
 body = {'values' : values}
 result = sheet.values().update(spreadsheetId=SPREADSHEET_ID,range="Test!A1",valueInputOption="USER_ENTERED",body=body).execute() # Test!A1 is A1 Google Sheets Notation

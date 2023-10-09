@@ -5,6 +5,7 @@ import orjson
 import pandas as pd
 import numpy as np
 import os
+from functions import check_last_version, check_champions, transmute_name_champion
 
 """
 Script done to upload data to a Google Sheet from Leaguepedia.
@@ -30,6 +31,9 @@ players = ["Player1",
            "Player4",
            "Player5"]
 games = []
+
+gameVersion = check_last_version()
+champions_json = check_champions(gameVersion)
 
 for player in players:
     # LeaguepediaQuery Example: DnDn
@@ -78,7 +82,7 @@ for player in players:
                 if ply['Team'] != match['Team']:
                     # Its an Enemy
                     if ply['Role'] == 'Top':
-                        match['ChampionTopVs'] = ply['Champion']
+                        match['ChampionTopVs'] = transmute_name_champion(ply['Champion'], champions_json)
                         match['KillsTopVs'] = ply['Kills']
                         match['DeathsTopVs'] = ply['Deaths']
                         match['AssistsTopVs'] = ply['Assists']
@@ -88,7 +92,7 @@ for player in players:
                         match['TeamKillsTopVs'] = ply['TeamKills']
                         match['TeamGoldTopVs'] = ply['TeamGold']
                     elif ply['Role'] == 'Jungle':
-                        match['ChampionJngVs'] = ply['Champion']
+                        match['ChampionJngVs'] = transmute_name_champion(ply['Champion'], champions_json)
                         match['KillsJngVs'] = ply['Kills']
                         match['DeathsJngVs'] = ply['Deaths']
                         match['AssistsJngVs'] = ply['Assists']
@@ -98,7 +102,7 @@ for player in players:
                         match['TeamKillsJngVs'] = ply['TeamKills']
                         match['TeamGoldJngVs'] = ply['TeamGold']
                     elif ply['Role'] == 'Mid':
-                        match['ChampionMidVs'] = ply['Champion']
+                        match['ChampionMidVs'] = transmute_name_champion(ply['Champion'], champions_json)
                         match['KillsMidVs'] = ply['Kills']
                         match['DeathsMidVs'] = ply['Deaths']
                         match['AssistsMidVs'] = ply['Assists']
@@ -108,7 +112,7 @@ for player in players:
                         match['TeamKillsMidVs'] = ply['TeamKills']
                         match['TeamGoldMidVs'] = ply['TeamGold']
                     elif ply['Role'] == 'Bot':
-                        match['ChampionBotVs'] = ply['Champion']
+                        match['ChampionBotVs'] = transmute_name_champion(ply['Champion'], champions_json)
                         match['KillsBotVs'] = ply['Kills']
                         match['DeathsBotVs'] = ply['Deaths']
                         match['AssistsBotVs'] = ply['Assists']
@@ -118,7 +122,7 @@ for player in players:
                         match['TeamKillsBotVs'] = ply['TeamKills']
                         match['TeamGoldBotVs'] = ply['TeamGold']
                     elif ply['Role'] == 'Support':
-                        match['ChampionSupVs'] = ply['Champion']
+                        match['ChampionSupVs'] = transmute_name_champion(ply['Champion'], champions_json)
                         match['KillsSupVs'] = ply['Kills']
                         match['DeathsSupVs'] = ply['Deaths']
                         match['AssistsSupVs'] = ply['Assists']
@@ -138,6 +142,8 @@ for player in players:
                         match['DmgAllySupport'] = ply['DamageToChampions']
             
             print("Match Append: " + match['GameId'])
+            
+            match['Champion'] = transmute_name_champion(match['Champion'], champions_json)
             stat_list.append(match)
         games_list.extend(stat_list)
     games.extend(games_list)
