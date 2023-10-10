@@ -9,7 +9,7 @@ from functions import transmute_league, transmute_win, transmute_name_champion, 
 """
 This scripts uploads data of all the drafts played at all the leagues in the worlds (by choice) to a Spreadsheet
 
-You can use this data and Looker Studio to do something like this: 
+You can use this data and Looker Studio to do something like this: https://lookerstudio.google.com/reporting/810270ea-a97a-46ae-826c-a9285378f7be
 """
 
 def queryDraftChampions(response, site):
