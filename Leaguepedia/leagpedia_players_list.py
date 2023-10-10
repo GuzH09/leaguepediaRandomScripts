@@ -6,7 +6,6 @@ from operator import itemgetter
 import pandas as pd
 import os
 import time
-import requests
 from functions import check_last_version, check_champions, transmute_name_champion
 
 """
@@ -17,6 +16,8 @@ It shows: LeaguepediaLink, Tag, Name, Location, Age, Role, Current Team, Last Te
 This script got obsolete because Leaguepedia now offers this to everyone on:
 https://lol.fandom.com/wiki/Category:Players
 https://lol.fandom.com/wiki/Category:Player_Residency_Categories
+
+I used this scripts to do something like this: https://lookerstudio.google.com/reporting/7cf1cb6b-7909-441f-8ec1-782d3c9c54ac
 """
 
 def queryPlayers(response, site, gameVersion):

@@ -1,12 +1,6 @@
-from math import ceil
-from datetime import datetime, timezone, timedelta
 import orjson
-import zstandard as zstd
-from random import gammavariate
 import requests
 import orjson
-import os
-import time
 
 def transmute_league(name):
     # Change selected leagues names for whatever you want
@@ -232,7 +226,8 @@ def transmute_blinds_and_contest_per_role_list(blue_champions, red_champions, or
 
 def transmute_name_champion(champion_name, champions_json):
     '''
-    Transmutes ids to Champions
+    Transmutes Champions Names to Champions Name "Well" written
+    Example: Tahm Kench -> TahmKench / Cho'Gath -> Chogath
     
     Use "check_last_version()" first to get the gameVersion
     then use "check_champions()" to get the champions Json from DDragon
@@ -244,6 +239,42 @@ def transmute_name_champion(champion_name, champions_json):
         if champion_data['name'] == str(champion_name):
             champion_name_transmuted = champion_data['id']
     return champion_name_transmuted
+
+def transmute_id_champion(champion_id, champions_json):
+    '''
+    Transmutes Champions IDs to Champions Names
+    Example: 266 -> Aatrox
+    
+    Use "check_last_version()" first to get the gameVersion
+    then use "check_champions()" to get the champions Json from DDragon
+    lastly use "transmute_id_champion" to get the Champions Names
+    '''
+    
+    champion_name_transmuted = ''
+    for champion_obj, champion_data in champions_json['data'].items():
+        if champion_data['key'] == str(champion_id):
+            champion_name_transmuted = champion_data['id']
+    return champion_name_transmuted
+
+def get_champions(side, payload, champions_json):
+    champions = []
+    if side == "Blue":
+        for player in payload['teamOne']['players']:
+            champion_name = transmute_id_champion(player['championID'], champions_json)
+            champions.append(champion_name)
+            
+        for player in payload['teamTwo']['players']:
+            champion_name = transmute_id_champion(player['championID'], champions_json)
+            champions.append(champion_name)
+    else:
+        for player in payload['teamTwo']['players']:
+            champion_name = transmute_id_champion(player['championID'], champions_json)
+            champions.append(champion_name)
+            
+        for player in payload['teamOne']['players']:
+            champion_name = transmute_id_champion(player['championID'], champions_json)
+            champions.append(champion_name)
+    return champions
 
 def check_last_version() -> str:
     '''Checks last patch of ddragon.'''
