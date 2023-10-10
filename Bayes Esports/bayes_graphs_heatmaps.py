@@ -13,7 +13,7 @@ from matplotlib.colors import LinearSegmentedColormap
 This script uses data of wards positions from Bayes Esports API to create heatmaps divided by lanes and sides
 It can be used for one single game, or a collection of games that needs to be on the same folder
 
-Example of what you can get:
+Example of what you can get: https://twitter.com/guzhotero/status/1711793270131433802
 
 Before using this script, check the code to fill the missing variables:
 Paths, teams names/urns, etc.

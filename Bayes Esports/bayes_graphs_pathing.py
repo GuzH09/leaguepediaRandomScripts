@@ -13,7 +13,7 @@ from functions import check_last_version, check_champions, get_champions
 """
 This script uses data of players positions from Bayes Esports API to create animations that show the jungle pathing in the early game
 
-Example of what you can get: 
+Example of what you can get: https://twitter.com/guzhotero/status/1711793267241566335
 
 Before using this script, check the code to fill the missing variables:
 Paths, teams names/urns, etc.
